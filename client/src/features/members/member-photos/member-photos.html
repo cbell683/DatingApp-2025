@@ -1,13 +1,36 @@
-@if (photos$ | async; as photos) {
+@if (!memberService.editMode()) {
+  @if (photos(); as photos) {
     @if (photos.length > 0) {
-        <div class="grid grid-cols-4 auto-rows-min gap-3 p-5 h-[65vw] overflow-auto">
-            @for (photo of photos; track photo.id) {
-                <img src="{{photo.url}}" alt="photo of member" class="w-full rounded-lg">
-            }
-            @for (photo of photoMocks; track $index) {
-                <img src="{{photo.url}}" alt="photo of member" class="w-full rounded-lg">
-            }
-
-        </div>
+      <div class="grid grid-cols-4 auto-rows-min gap-3 p-5 h-[65vw] overflow-auto">
+        @for (photo of photos; track photo.id) {
+          <div class="relative">
+               <img src="{{photo.url}}" class="w-full rounded-lg">
+               @if (accountService.currentUser()?.id === memberService.member()?.id){
+               <app-star-button
+                 [disabled]="photo.url === memberService.member()?.imageUrl"
+                 [selected]="photo.url === memberService.member()?.imageUrl"
+                 (clickEvent)="setMainPhoto(photo)"
+                 class="absolute top-1 right-1"
+               />
+                <app-delete-button
+                [disabled]="photo.url === memberService.member()?.imageUrl"
+                (clickEvent)="deletePhoto(photo.id)"
+                class="absolute top-1 right-1"
+                />
+          }
+          </div>
+        }
+      </div>
     }
+  }
+}
+
+@if (memberService.editMode()) {
+  <div class="p-5">
+    <!-- your upload controls -->
+    <app-image-upload
+      [loading]="loading()"
+      (uploadFile)="onUploadImage($event)">
+    </app-image-upload>
+  </div>
 }
