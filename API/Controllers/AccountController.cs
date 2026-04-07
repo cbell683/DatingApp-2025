@@ -15,24 +15,41 @@ namespace API.Controllers;
 
 public class AccountController(AppDbContext context, ITokenService tokenService) : BaseApiController
 {
-    [HttpPost("register")]  //a pi/conteoller/register
-    public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
+    [HttpPost("register")]
+public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
+{
+    if (await EmailExists(registerDto.Email))
+        return BadRequest("Email Taken");
+
+    using var hmac = new HMACSHA512();
+
+    var user = new AppUser
     {
-        if (await EmailExists(registerDto.Email)) return BadRequest("Email Taken");
-        using var hmac = new HMACSHA512();
-        var user = new AppUser
-        {
-            DisplayName = registerDto.DisplayName,
-            Email = registerDto.Email,
-            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-            PasswordSalt = hmac.Key
-        };
+        DisplayName = registerDto.DisplayName,
+        Email = registerDto.Email,
+        PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
+        PasswordSalt = hmac.Key
+    };
 
-        context.Users.Add(user);
-        await context.SaveChangesAsync();
+    var member = new Member
+    {
+        Id = Guid.NewGuid().ToString(),     // REQUIRED
+        AppUserId = user.Id,                // REQUIRED
+        DisplayName = registerDto.DisplayName,
+        Gender = registerDto.Gender,
+        Description = "",
+        City = registerDto.City,
+        Country = registerDto.Country,
+        DateOfBirth = registerDto.DateOfBirth
+    };
 
-        return user.ToDto(tokenService);
-        }
+    user.Member = member;
+
+    context.Users.Add(user);
+    await context.SaveChangesAsync();
+
+    return user.ToDto(tokenService);
+}
 
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)

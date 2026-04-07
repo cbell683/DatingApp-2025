@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260317221955_InitialCreate")]
+    [Migration("20260331231000_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -136,7 +136,7 @@ namespace API.Migrations
             modelBuilder.Entity("API.Entities.Photo", b =>
                 {
                     b.HasOne("API.Entities.Member", "Member")
-                        .WithMany()
+                        .WithMany("Photos")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -147,6 +147,11 @@ namespace API.Migrations
             modelBuilder.Entity("API.Entities.AppUser", b =>
                 {
                     b.Navigation("Member");
+                });
+
+            modelBuilder.Entity("API.Entities.Member", b =>
+                {
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }
