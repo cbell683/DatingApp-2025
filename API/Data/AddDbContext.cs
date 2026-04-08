@@ -15,12 +15,29 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
 
        public DbSet<Photo> Photos { get; set; }
 
+       public DbSet<MemberLike> Likes {get; set;}
+
 
    
 // CB commented the below 04072026
  protected override void OnModelCreating(ModelBuilder modelBuilder)
 {    
     base.OnModelCreating(modelBuilder);
+
+    modelBuilder.Entity<MemberLike>()
+        .HasKey(x => new { x.SourceMemberId, x.TargetMemberId });
+
+    modelBuilder.Entity<MemberLike>()
+        .HasOne(s => s.SourceMember)
+        .WithMany(t => t.LikedMembers)
+        .HasForeignKey(s => s.SourceMemberId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+    modelBuilder.Entity<MemberLike>()
+        .HasOne(s => s.TargetMember)
+        .WithMany(t => t.LikedByMembers)
+        .HasForeignKey(s => s.TargetMemberId)
+        .OnDelete(DeleteBehavior.NoAction);
 
     modelBuilder.Entity<Member>()
         .HasOne(m => m.User)
