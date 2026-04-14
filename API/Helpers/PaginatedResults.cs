@@ -1,4 +1,5 @@
 using System;
+using API.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Helpers;
@@ -37,6 +38,11 @@ public static async Task<PaginatedResult<T>> CreateAsync<T>(IQueryable<T> query,
             Items = items
 
         };
+    }
+
+    internal static async Task<PaginatedResult<MessageDto>> CreateAsync(object messsageQuery, int pageNumber, int pageSize)
+    {
+        throw new NotImplementedException();
     }
 }
 
