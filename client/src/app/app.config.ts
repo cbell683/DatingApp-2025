@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
 
      const initService = inject(InitService);
            try {
-        return () => lastValueFrom(initService.init());
+        await lastValueFrom(initService.init());
 
       } finally  {
           const splash = document.getElementById('initial-spash')

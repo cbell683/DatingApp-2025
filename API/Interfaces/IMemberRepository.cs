@@ -1,16 +1,16 @@
 using System;
 using API.Entities;
 using API.Helpers;
-using Microsoft.VisualStudio.TextTemplating;
 
 namespace API.Interfaces;
 
 public interface IMemberRepository
 {
-    void Update (Member member);
-    Task<bool> SaveAllAsync();
+    void Update(Member member);
     Task<PaginatedResult<Member>> GetMembersAsync(MemberParams memberParams);
     Task<Member?> GetMemberByIdAsync(string id);
-    Task<IReadOnlyList<Photo>> GetPhotosForMemberAsync(string memberId);
+    Task<IReadOnlyList<Photo>> GetPhotosForMemberAsync(string memberId, bool isCurrentUser);
     Task<Member?> GetMemberForUpdate(string id);
+    Task<bool> SaveAllAsync();
+    Task<object?> GetPhotosForMemberAsync(string id, object isCurrentUser);
 }

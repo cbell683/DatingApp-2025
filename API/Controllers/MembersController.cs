@@ -37,7 +37,7 @@ namespace API.Controllers
         [HttpGet("{id}/photos")]
         public async Task<ActionResult<IReadOnlyList<Photo>>> GetMemberPhotos(string id)
         {
-            return Ok (await memberRepository.GetPhotosForMemberAsync(id));
+            return Ok (await memberRepository.GetPhotosForMemberAsync(id, true));
         }
         [HttpPut]
         public async Task<ActionResult> UpdateMember(MemberUpdateDto memberUpdateDto)

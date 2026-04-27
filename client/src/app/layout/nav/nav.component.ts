@@ -7,13 +7,14 @@ import { RouterLinkActive } from '@angular/router';
 import{ ToastService } from '../../../core/services/toast-service';
 import { themes } from '../theme';
 import { BusyService } from '../../../core/services/busy-service';
+import { HasRole } from '../../../shared/directives/has-role';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
   templateUrl: './nav.html',
   styleUrls: ['./nav.css'],
-  imports: [FormsModule, RouterLink]
+  imports: [FormsModule, RouterLink, RouterLinkActive, HasRole]
 })
 export class Nav implements OnInit{
 
